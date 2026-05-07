@@ -1,3 +1,4 @@
+import pytz
 from datetime import datetime,date
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
@@ -82,43 +83,38 @@ def get_student_enrolled_courses(db: Session, current_user):
     return [{"id": c.id, "name": c.name} for c in courses]
 
 def get_student_home_dashboard(db: Session, current_user, course_id: int):
-    """Returns all data for the home screen after a course is selected"""
-    # Identify the student
+    # Handle timezone (IST)
+    IST = pytz.timezone('Asia/Kolkata')
+    now_ist = datetime.now(IST)
+    hour = now_ist.hour
+    
+    greeting = "Good Morning" if hour < 12 else "Good Afternoon" if hour < 17 else "Good Evening"
+
     student = db.query(Student).filter(Student.user_id == current_user.id).first()
     if not student:
         raise HTTPException(status_code=404, detail="Student record not found")
 
-    # Enrollment Check: Security layer
     is_enrolled = db.query(StudentCourse).filter(
         StudentCourse.student_id == student.id,
         StudentCourse.course_id == course_id
     ).first()
 
     if not is_enrolled:
-        raise HTTPException(
-            status_code=403, 
-            detail="Access Denied: You are not enrolled in this course."
-        )
-    
-    # Greetings
-    hour = datetime.now().hour
-    greeting = "Good Morning" if hour < 12 else "Good Afternoon" if hour < 17 else "Good Evening"
+        raise HTTPException(status_code=403, detail="Access Denied.")
 
-    # Attendance History & Count
     attendance_records = db.query(Attendance).filter(
         Attendance.student_id == student.id,
         Attendance.course_id == course_id
     ).order_by(Attendance.date.desc()).all()
 
-    present_count = sum(1 for a in attendance_records if a.status.value.lower() == "present")
+    present_count = sum(1 for a in attendance_records if str(a.status).lower() == "present")
 
-    # Class Schedules
     schedules = db.query(Schedule).filter(
         Schedule.course_id == course_id,
-        Schedule.branch_id == student.branch_id
-    ).all()
+        Schedule.branch_id == student.branch_id,
+        Schedule.class_date >= date.today
+    ).order_by(Schedule.class_date.asc()).all
 
-    # Class Logs 
     logs = db.query(DailyLog).filter(
         DailyLog.course_id == course_id
     ).order_by(DailyLog.date.desc()).limit(5).all()
@@ -136,8 +132,11 @@ def get_student_home_dashboard(db: Session, current_user, course_id: int):
             ]
         },
         "schedules": [
-            {"date": s.class_date.strftime("%d %b"), "day": s.class_date.strftime("%A"), "time": s.class_time.strftime("%I:%M %p")}
-            for s in schedules
+            {
+                "date": s.class_date.strftime("%d %b"), 
+                "day": s.class_date.strftime("%A"), 
+                "time": s.class_time.strftime("%I:%M %p")
+            } for s in schedules
         ],
         "recent_logs": [
             {
