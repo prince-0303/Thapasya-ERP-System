@@ -12,4 +12,4 @@ class Payment(Base):
     amount_paid=Column(Integer)
     payment_date=Column(Date)
 
-    schedule=relationship("FeeSchedule",back_populates=True)
+    schedule=relationship("FeeSchedule",back_populates="payments")

@@ -17,3 +17,5 @@ class FeeSchedule(Base):
 
     student=relationship("Student")
     course=relationship("Course")
+
+    payments = relationship("Payment", back_populates="schedule")
