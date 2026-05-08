@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, Float, Boolean
 from app.db.base_class import Base
+from sqlalchemy.orm import relationship
 
 class Course(Base):
     __tablename__ = "courses"
@@ -11,3 +12,5 @@ class Course(Base):
     fee = Column(Float, nullable=True)
     is_active = Column(Boolean, default=True)
     image_url = Column(String(255), nullable=True)
+
+    staff_courses = relationship("StaffCourse", back_populates="course")

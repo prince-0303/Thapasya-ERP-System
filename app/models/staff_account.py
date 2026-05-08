@@ -13,5 +13,5 @@ class StaffAccount(Base):
     account_number= Column(String)
     ifsc = Column(String)
 
-    staff=relationship("Staff")
+    staff=relationship("Staff",back_populates='staff_accounts')
     user=relationship("User")

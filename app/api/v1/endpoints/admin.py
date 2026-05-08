@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 
 from app.core.dependencies import get_current_admin
-from app.services.admin_service import student_list,get_student_details,get_dashborad_data,get_monthly_revenue
+from app.services.admin_service import student_list,get_student_details,get_dashborad_data,get_monthly_revenue,get_staff_service,get_staff_details_service,get_branch_service,get_staff_basedbranch_service
 
 
 router=APIRouter(prefix='/admin',tags=["Admin Apis"])
@@ -44,5 +44,36 @@ def monthly_revenue(db : Session=Depends(get_db),current_admin=Depends(get_curre
             }
             for row in data
         ]
+    except Exception as e:
+        raise HTTPException(status_code=400,detail=str(e))
+    
+@router.get('/get-staffs')
+def get_staff(db : Session=Depends(get_db),current_admin=Depends(get_current_admin)):
+    try:
+        return get_staff_service(db,current_admin)
+    except Exception as e:
+        raise HTTPException(status_code=400,detail=str(e))
+
+
+@router.get('/staff-details')
+def get(staff_id : int ,db : Session=Depends(get_db),current_admin=Depends(get_current_admin)):
+    try:
+        return get_staff_details_service(db,current_admin,staff_id)
+    except Exception as e:
+        raise HTTPException(status_code=400,detail=str(e))
+    
+    
+@router.get('/get-branch')
+def get_branch(db : Session=Depends(get_db),current_admin=Depends(get_current_admin)):
+    try:
+        return get_branch_service(db,current_admin)
+    except Exception as e:
+        raise HTTPException(status_code=400,detail=str(e))
+ 
+    
+@router.get('/get-staff-branchbased')
+def get_staff_branchbased(branch_id : int,db : Session=Depends(get_db),current_admin=Depends(get_current_admin)):
+    try:
+        return get_staff_basedbranch_service(db,current_admin,branch_id)
     except Exception as e:
         raise HTTPException(status_code=400,detail=str(e))
