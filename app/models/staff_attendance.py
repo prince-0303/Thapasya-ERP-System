@@ -17,7 +17,7 @@ class StaffAttendance(Base):
 
     status=Column(Enum(AttendanceStatus),nullable=False)
 
-    staff_course=relationship("StaffCourse",back_populates="attendance")
+    staff_course=relationship("StaffCourse",back_populates="attendances")
 
     __table_args__=(
         UniqueConstraint("staff_course_id","date",name="unique_staff_course_date"),
