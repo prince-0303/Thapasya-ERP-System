@@ -14,6 +14,8 @@ class Staff(Base):
     adhar_url= Column(String)
     address=Column(Text,nullable=True)
 
+    staff_courses = relationship("StaffCourse", back_populates="staff")
+    staff_accounts=relationship('StaffAccount',back_populates='staff',uselist=False)
     user=relationship("User")
     branch=relationship("Branch")
 

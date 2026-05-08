@@ -11,5 +11,7 @@ class StaffCourse(Base):
 
     assigned_date=Column(Date,nullable=False)
 
-    staff=relationship("Staff")
-    course=relationship("Course")
+    monthly_salary=Column(Integer,nullable=False)
+
+    staff=relationship("Staff",back_populates='staff_courses')
+    course=relationship("Course",back_populates='staff_courses')

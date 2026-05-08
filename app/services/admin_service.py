@@ -7,7 +7,16 @@ from app.models.student_course import StudentCourse
 from app.models.fee import FeeSchedule
 
 from app.models.staff import Staff
+from app.models.staff_course import StaffCourse
 from app.models.payment import Payment
+
+from app.models.branch import Branch
+
+from app.models.staff_attendance import StaffAttendance
+
+from app.utils.seeds import today
+
+# student datas
 
 
 def student_list(db : Session ,current_admin):
@@ -100,3 +109,117 @@ def get_monthly_revenue(db : Session, current_admin):
     
     except Exception as e:
         raise HTTPException(status_code=400,detail=str(e))
+
+
+
+# staff datas
+
+def get_staff_service(db : Session,current_admin):
+    try:
+        staffs=db.query(Staff).all()
+        return [{
+            "id":staff.id,
+            "name":staff.name,
+            "branch":staff.branch.name
+        }
+        for staff in staffs
+        ]
+    except Exception as e:
+        raise HTTPException(status_code=400,detail=str(e))
+    
+
+
+def get_staff_details_service(db: Session,current_admin,staff_id):
+
+    try:
+        staff=db.query(Staff).get(staff_id)
+
+        total_salary=db.query(func.sum(StaffCourse.monthly_salary)).filter(StaffCourse.staff_id ==  staff_id).scalar()
+
+        return {
+            "name":staff.name,
+            "phone":staff.phone,
+            "address":staff.address,
+            "useid":staff.user.username,
+            "email":staff.user.email,
+            "branch":staff.branch.name,
+            "account_details":{
+                "acc_no":staff.staff_accounts.account_number,
+                "ifsc":staff.staff_accounts.ifsc
+            },
+            "salary_data":[
+                {
+                    "course":sal.course.name,
+                    "salary":sal.monthly_salary
+                }
+                for sal in staff.staff_courses
+            ],
+            "total_salary":total_salary if total_salary else 0
+        }
+    
+    except Exception as e:
+        raise HTTPException(status_code=400,detail=str(e))
+    
+
+
+# staff attendance
+
+
+def get_branch_service(db : Session,current_admin):
+    try:
+        branchs=db.query(Branch).all()
+        return [
+            {
+                "id":branch.id,
+                "name":branch.name
+            }
+            for branch in branchs
+        ]
+    except Exception as e:
+        raise HTTPException(status_code=400,detail=str(e))
+    
+
+def get_staff_basedbranch_service(db :Session, current_admin,branch_id):
+    try:
+        staffs=db.query(Staff).filter(Staff.branch_id == branch_id).all()
+
+        if not staffs:
+            raise HTTPException(status_code=404,detail="Staffs not found in this branch")
+
+        return [
+            {
+                "name":staff.name,
+                "course":[
+                    {
+                        "id":staff_course.course.id,
+                        "name":staff_course.course.name
+                    }
+                    for staff_course in staff.staff_courses
+                ]
+            }
+            for staff in staffs
+        ]
+    except Exception as e:
+        raise HTTPException(status_code=400,detail=str(e))
+
+
+
+
+def staff_attedence_service(data,db: Session , current_admin):
+    try:
+        attendance=StaffAttendance(
+            staff_course_id=data.staff_course_id,
+            date=today,
+            status=data.status
+        )
+        db.add(attendance)
+        db.commit()
+        db.refresh(attendance)
+
+        return attendance
+    
+    except Exception as e:
+        raise HTTPException(status_code=400,detail=str(e))
+
+
+

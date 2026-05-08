@@ -13,8 +13,8 @@ from app.models.student import Student
 from app.models.staff_course import StaffCourse
 from app.core.dependencies import check_user_role
 from app.models.attendence import Attendance
-from datetime import date
 
+from app.utils.seeds import today
 
 def register_staff(db,data,current_admin):
     try:
@@ -44,7 +44,7 @@ def register_staff(db,data,current_admin):
             db.add(StaffCourse(
                 staff_id = staff.id,
                 course_id = course_id,
-                assigned_date=date.today()
+                assigned_date=today
             ))
 
         account= StaffAccount(
@@ -108,7 +108,7 @@ def mark_attendance_service(data,db,current_user):
         attendance=Attendance(
             student_id = data.student_id,
             course_id= data.course_id,
-            date=date.today(),
+            date=today,
             status=data.status
         )
         db.add(attendance)
