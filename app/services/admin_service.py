@@ -209,7 +209,7 @@ def staff_attedence_service(data,db: Session , current_admin):
     try:
         attendance=StaffAttendance(
             staff_course_id=data.staff_course_id,
-            date=today,
+            date=today(),
             status=data.status
         )
         db.add(attendance)

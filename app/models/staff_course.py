@@ -15,3 +15,4 @@ class StaffCourse(Base):
 
     staff=relationship("Staff",back_populates='staff_courses')
     course=relationship("Course",back_populates='staff_courses')
+    attendances = relationship("StaffAttendance", back_populates="staff_course")
