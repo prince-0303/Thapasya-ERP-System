@@ -20,6 +20,6 @@ class StaffAttendance(Base):
     staff_course=relationship("StaffCourse",back_populates="attendance")
 
     __table_args__=(
-        UniqueConstraint("staff_course_id","date",name="unique_staff_course_date")
+        UniqueConstraint("staff_course_id","date",name="unique_staff_course_date"),
     )
     
