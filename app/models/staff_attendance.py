@@ -11,7 +11,7 @@ class AttendanceStatus(enum.Enum):
 class StaffAttendance(Base):
     __tablename__="staff_attendance"
 
-    id = Column(Integer, primary_key=True ,index=True),
+    id = Column(Integer, primary_key=True ,index=True)
     staff_course_id=Column(Integer,ForeignKey("staff_courses.id"),nullable=False)
     date=Column(Date,nullable=False)
 
