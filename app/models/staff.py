@@ -16,6 +16,7 @@ class Staff(Base):
 
     staff_courses = relationship("StaffCourse", back_populates="staff")
     staff_accounts=relationship('StaffAccount',back_populates='staff',uselist=False)
+    salary_payments=relationship("SalaryPayment",back_populates="staff")
     user=relationship("User")
     branch=relationship("Branch")
 
