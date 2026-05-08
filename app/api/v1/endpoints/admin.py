@@ -3,8 +3,9 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 
 from app.core.dependencies import get_current_admin
-from app.services.admin_service import student_list,get_student_details,get_dashborad_data,get_monthly_revenue,get_staff_service,get_staff_details_service,get_branch_service,get_staff_basedbranch_service
+from app.services.admin_service import student_list,get_student_details,get_dashborad_data,get_monthly_revenue,get_staff_service,get_staff_details_service,get_branch_service,get_staff_basedbranch_service,staff_attedence_service
 
+from app.schemas.admin import StaffAttendanceCreate
 
 router=APIRouter(prefix='/admin',tags=["Admin Apis"])
 
@@ -75,5 +76,13 @@ def get_branch(db : Session=Depends(get_db),current_admin=Depends(get_current_ad
 def get_staff_branchbased(branch_id : int,db : Session=Depends(get_db),current_admin=Depends(get_current_admin)):
     try:
         return get_staff_basedbranch_service(db,current_admin,branch_id)
+    except Exception as e:
+        raise HTTPException(status_code=400,detail=str(e))
+
+
+@router.post('/staff-attendance')
+def mark_staff_attendance(data : StaffAttendanceCreate ,db : Session=Depends(get_db),current_admin=Depends(get_current_admin)):
+    try:
+        return staff_attedence_service(data,db,current_admin)
     except Exception as e:
         raise HTTPException(status_code=400,detail=str(e))

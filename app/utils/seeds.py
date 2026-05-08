@@ -30,5 +30,6 @@ def create_default_admin(db):
     db.add(admin)
     db.commit()
 
-IST=pytz.timezone("Asia/Kolkata")
-today=datetime.now(IST).date()
+def today():
+    IST=pytz.timezone("Asia/Kolkata")
+    return datetime.now(IST).date()
