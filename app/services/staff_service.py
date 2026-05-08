@@ -44,7 +44,7 @@ def register_staff(db,data,current_admin):
             db.add(StaffCourse(
                 staff_id = staff.id,
                 course_id = course_id,
-                assigned_date=today
+                assigned_date=today()
             ))
 
         account= StaffAccount(
@@ -108,7 +108,7 @@ def mark_attendance_service(data,db,current_user):
         attendance=Attendance(
             student_id = data.student_id,
             course_id= data.course_id,
-            date=today,
+            date=today(),
             status=data.status
         )
         db.add(attendance)
