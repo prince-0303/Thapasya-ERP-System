@@ -14,6 +14,7 @@ from app.api.v1.endpoints.fee import router as fee_router
 from app.api.v1.endpoints.notification import router as notification_router
 from app.api.v1.endpoints.admin import router as admin_routes
 from app.api.v1.endpoints.payment import router as payment_router
+from app.api.v1.endpoints.salary import router as salary_routes
 
 api_router = APIRouter()
 
@@ -32,6 +33,7 @@ api_router.include_router(class_schedule)
 api_router.include_router(user_profile)
 api_router.include_router(fee_router)
 api_router.include_router(admin_routes)
+api_router.include_router(salary_routes)
 
 # Website routes
 

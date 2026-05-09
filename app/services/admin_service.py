@@ -222,4 +222,23 @@ def staff_attedence_service(data,db: Session , current_admin):
         raise HTTPException(status_code=400,detail=str(e))
 
 
+def staff_attendance_log(db : Session, current_admin, staff_id):
+    try:
+        attendances=db.query(StaffAttendance).join(StaffCourse).filter(
+            StaffCourse.staff_id == staff_id
+        ).limit(10).all()
+
+        if not attendances:
+            raise HTTPException(status_code=404,detail="Attendance Log not available")
+        
+        return[
+            {
+                "date":attendance.date,
+                "course":attendance.staff_course.course.name,
+                "status":attendance.status
+            }
+            for attendance in attendances
+        ]
+    except Exception as e:
+        raise HTTPException(status_code=400,detail=str(e))
 
