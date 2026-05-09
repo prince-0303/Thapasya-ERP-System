@@ -15,7 +15,7 @@ class FeeSchedule(Base):
 
     status=Column(String,default="pending")
 
-    student=relationship("Student")
+    student = relationship("Student")
     course=relationship("Course")
 
     payments = relationship("Payment", back_populates="schedule")

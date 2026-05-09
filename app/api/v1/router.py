@@ -13,12 +13,14 @@ from app.api.v1.endpoints.profile import router as user_profile
 from app.api.v1.endpoints.fee import router as fee_router
 from app.api.v1.endpoints.notification import router as notification_router
 from app.api.v1.endpoints.admin import router as admin_routes
+from app.api.v1.endpoints.payment import router as payment_router
 
 api_router = APIRouter()
 
 # Application routes
 
 api_router.include_router(notification_router, prefix="/notifications", tags=["notifications"])
+api_router.include_router(payment_router, prefix="/payments", tags=["payments"])
 api_router.include_router(student_router, prefix="/student", tags=["Students"])
 api_router.include_router(staff_router, prefix="/staff", tags=["Staff"])
 api_router.include_router(auth_router, prefix="/auth", tags=["Auth"])
