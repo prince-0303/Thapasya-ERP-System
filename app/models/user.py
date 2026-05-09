@@ -15,3 +15,4 @@ class User(Base):
     role=relationship("Role")
     
     device_tokens = relationship("UserDeviceToken", back_populates="user", cascade="all, delete-orphan")
+    student_profile = relationship("Student", back_populates="user", uselist=False)

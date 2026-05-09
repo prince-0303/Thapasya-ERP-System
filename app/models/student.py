@@ -16,6 +16,6 @@ class Student(Base):
     dob=Column(String)
     address=Column(Text,nullable=True)
 
-    user=relationship("User")
+    user = relationship("User", back_populates="student_profile")
     parent=relationship("Parent")
     branch=relationship("Branch")
