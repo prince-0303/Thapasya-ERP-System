@@ -47,10 +47,10 @@ def create_daily_log_service(data, db : Session ,current_user):
     return log
 
 
-def get_all_logs_service(staff_id, db : Session, current_admin):
+def get_all_logs_service(staff_id, db : Session, current_user):
 
-    role= check_admin_role(db,current_admin)
-    if role != "admin":
+    role= check_admin_role(db,current_user)
+    if role != "admin" or role != "staff":
         raise HTTPException(status_code=403,detail="Admin only can access")
     
     log = db.query(DailyLog).filter(
