@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.schemas.daily_log import DailyLogCreate
-from app.core.dependencies import get_current_user,get_current_admin
+from app.core.dependencies import get_current_user
 from app.services.daily_log_service import create_daily_log_service,get_all_logs_service
 
 

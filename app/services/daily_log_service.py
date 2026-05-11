@@ -49,17 +49,21 @@ def create_daily_log_service(data, db : Session ,current_user):
 
 def get_all_logs_service(staff_id, db : Session, current_user):
 
-    role= check_admin_role(db,current_user)
-    if role != "admin" or role != "staff":
-        raise HTTPException(status_code=403,detail="Admin only can access")
+    role= check_user_role(db,current_user)
     
-    log = db.query(DailyLog).filter(
+    if role == "admin" or role == "staff":
+
+        log = db.query(DailyLog).filter(
         DailyLog.staff_id == staff_id
-    ).all()
+        ).all()
 
-    if not log:
-        return {
-            "message":"No log from the staff"
-        }
+        if not log:
+            return {
+                "message":"No log from the staff"
+            }
 
-    return log
+        return log
+    else:
+        raise HTTPException(status_code=403,detail="Api can't access")
+    
+    
