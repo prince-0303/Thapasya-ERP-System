@@ -29,10 +29,3 @@ Thapasya ERP is a full-stack Enterprise Resource Planning solution designed to d
 
 ## 🏗 System Architecture
 The backend follows a **Repository Pattern** to decouple business logic from data access, ensuring the system remains maintainable and testable as the institution scales.
-
-## 🔧 Installation & Setup
-
-1. **Clone the Repo:**
-   ```bash
-   git clone [https://github.com/prince-0303/Thapasya-ERP-System.git](https://github.com/prince-0303/Thapasya-ERP-System.git)
-   cd Thapasya-ERP-System
