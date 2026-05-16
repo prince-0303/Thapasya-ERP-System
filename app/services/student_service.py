@@ -112,8 +112,8 @@ def get_student_home_dashboard(db: Session, current_user, course_id: int):
     schedules = db.query(Schedule).filter(
         Schedule.course_id == course_id,
         Schedule.branch_id == student.branch_id,
-        Schedule.class_date >= date.today
-    ).order_by(Schedule.class_date.asc()).all
+        Schedule.class_date >= date.today()
+    ).order_by(Schedule.class_date.asc()).all()
 
     logs = db.query(DailyLog).filter(
         DailyLog.course_id == course_id
