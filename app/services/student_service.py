@@ -124,13 +124,6 @@ def get_student_home_dashboard(db: Session, current_user, course_id: int):
             "greeting": greeting, 
             "name": student.name
         },
-        "attendance": {
-            "total_present": present_count,
-            "history": [
-                {"date": a.date.strftime("%d %b %Y"), "status": a.status} 
-                for a in attendance_records
-            ]
-        },
         "schedules": [
             {
                 "date": s.class_date.strftime("%d %b"), 
